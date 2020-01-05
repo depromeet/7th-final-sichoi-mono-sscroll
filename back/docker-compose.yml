@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  local_db:
+    container_name: local_postgres_db
+    image: postgres:10.9
+    environment:
+      - POSTGRES_USER=clogic
+      - POSTGRES_PASSWORD=clogic123
+      - POSTGRES_DB=sscroll
+      - POSTGRES_HOST=local_db
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

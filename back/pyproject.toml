@@ -1,0 +1,21 @@
+[tool.black]
+skip-string-normalization = true
+line-length = 79
+target-version = ['py37']
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+)/
+'''
