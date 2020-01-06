@@ -4,6 +4,7 @@ import random
 import time
 import traceback
 import urllib
+from _datetime import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
 
@@ -11,7 +12,6 @@ import boto3
 from boto3 import s3
 from selenium import webdriver
 
-from _datetime import datetime
 from app.config import Config
 from app.db import create_session
 from app.models import Article
@@ -126,7 +126,7 @@ class Crawler:
                     )
                     session.add(article)
                     session.commit()
-                    # time.sleep(random.random() * 3 + 4)
+                    time.sleep(random.random() * 1 + 2)
                 print(f'{self.page}페이지 탐색 완료')
         except Exception as e:
             traceback.print_tb(e.__traceback__)

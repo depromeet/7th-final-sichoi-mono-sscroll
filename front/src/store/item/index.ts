@@ -6,16 +6,22 @@ class ItemStore {
   @observable
   itemList: ItemModel[];
 
-  id: number;
+  isLoading: boolean;
 
   constructor() {
-    this.id = 0;
+    this.isLoading = false;
     this.itemList = [];
   }
 
   @action.bound
   async fetch() {
+    if (this.isLoading) {
+      return;
+    }
+
+    this.isLoading = true;
     const response = await axios.get('/content');
+    this.isLoading = false;
     const data = response.data;
 
     const item = new ItemModel(data.id, data.title, data.body);

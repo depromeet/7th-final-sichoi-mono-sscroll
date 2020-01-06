@@ -8,7 +8,8 @@ import * as serviceWorker from './serviceWorker';
 if (process.env.NODE_ENV !== 'production') {
   axios.defaults.baseURL = `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_PORT}`;
 } else {
-  axios.defaults.baseURL = '설정하자';
+  axios.defaults.baseURL =
+    'http://ec2-15-164-215-195.ap-northeast-2.compute.amazonaws.com';
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));
