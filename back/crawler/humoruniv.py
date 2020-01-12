@@ -50,6 +50,9 @@ class HumorUniv(Crawler):
         body.name = 'div'
 
         self.body_process(body)
+        for div in body.select('div.comment_crop_href_mp4'):
+            div.extract()
+
         body = str(body)
 
         item = Item(title=title, text=body, created_at=datetime.now())
@@ -69,7 +72,7 @@ class HumorUniv(Crawler):
 
     def img_process(self, img):
 
-        if 'src' not in img:
+        if not img.has_attr('src'):
             del img
             return
 

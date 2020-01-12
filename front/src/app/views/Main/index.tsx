@@ -36,10 +36,10 @@ const View = ({ onUpdate }: Props) => {
       <Box>
         <AppBar position="static" color="default">
           <Toolbar>
-            <Typography variant="h6">SScroll</Typography>
+            <Typography variant="h6">쓰끄롤</Typography>
           </Toolbar>
         </AppBar>
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <ItemList></ItemList>
         </Container>
       </Box>

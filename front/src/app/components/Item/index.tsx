@@ -17,7 +17,7 @@ export const ItemList: React.FC = observer(() => {
       }
       loadMore={store.fetch}
       hasMore={!store.isLoading}
-      key={Math.floor(Math.random() * 10000)}
+      key={0}
     >
       {store.itemList.map(item => (
         <Item data={item} key={item.id}></Item>
