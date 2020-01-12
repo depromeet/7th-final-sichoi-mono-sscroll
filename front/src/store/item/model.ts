@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 interface ModelConstructor {
   id: number;
   title: string;
-  content: string;
+  body: string;
 }
 
 export default class ItemModel {
@@ -11,9 +11,9 @@ export default class ItemModel {
   @observable title: string;
   @observable content: string;
 
-  constructor({ id, title, content }: ModelConstructor) {
+  constructor({ id, title, body }: ModelConstructor) {
     this.id = id;
     this.title = title;
-    this.content = content;
+    this.content = body;
   }
 }
