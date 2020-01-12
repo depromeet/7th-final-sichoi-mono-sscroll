@@ -24,7 +24,7 @@ class ItemStore {
     this.isLoading = false;
     const data = response.data;
 
-    const item = new ItemModel(data.id, data.title, data.body);
+    const item = new ItemModel({ ...data });
     this.itemList.push(item);
   }
 }

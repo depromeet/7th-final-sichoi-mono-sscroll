@@ -11,8 +11,14 @@ import {
 import { ItemList } from 'app/components/Item';
 import React from 'react';
 
-const View: React.FC = () => {
+interface Props {
+  onUpdate: () => void;
+}
+
+const View = ({ onUpdate }: Props) => {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  onUpdate();
   const prefersDarkMode = true;
 
   const theme = React.useMemo(

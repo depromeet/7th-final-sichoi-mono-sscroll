@@ -1,11 +1,11 @@
 import hashlib
 import os
 import urllib
+from _datetime import datetime
 
 import boto3
 from bs4 import BeautifulSoup, element
 
-from _datetime import datetime
 from app.config import Config
 from crawler import Crawler, Item
 
@@ -49,9 +49,7 @@ class HumorUniv(Crawler):
         body = body.select('wrap_copy')[0]
         body.name = 'div'
 
-        [self.img_process(img) for img in body.findAll('img')]
-        [self.video_process(video) for video in body.findAll('video')]
-
+        self.body_process(body)
         body = str(body)
 
         item = Item(title=title, text=body, created_at=datetime.now())
@@ -70,6 +68,11 @@ class HumorUniv(Crawler):
         self.save_resource(video.find('source') or video)
 
     def img_process(self, img):
+
+        if 'src' not in img:
+            del img
+            return
+
         if '/images/' in img['src']:
             return
 

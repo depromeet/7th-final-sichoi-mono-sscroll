@@ -16,7 +16,7 @@ export const ItemList: React.FC = observer(() => {
         </div>
       }
       loadMore={store.fetch}
-      hasMore={true}
+      hasMore={!store.isLoading}
       key={Math.floor(Math.random() * 10000)}
     >
       {store.itemList.map(item => (

@@ -1,11 +1,11 @@
 import hashlib
 import os
 import urllib
+from _datetime import datetime
 
 import boto3
 from bs4 import BeautifulSoup, element
 
-from _datetime import datetime
 from app.config import Config
 from crawler import Crawler, Item
 
@@ -61,9 +61,7 @@ class Dogdrip(Crawler):
         body = body.select('#article_1 > div')[0]
         body.select('.wgtRv')[0].clear()
 
-        [self.img_process(img) for img in body.findAll('img')]
-        [self.video_process(video) for video in body.findAll('video')]
-
+        self.body_process(body)
         body = str(body)
 
         item = Item(title=title, text=body, created_at=datetime.now())

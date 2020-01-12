@@ -1,18 +1,25 @@
 import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactGA from 'react-ga';
 import Main from './app/views/Main';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
+ReactGA.initialize('UA-120460450-1');
+
 if (process.env.NODE_ENV !== 'production') {
-  axios.defaults.baseURL = `http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_PORT}`;
-} else {
-  axios.defaults.baseURL =
-    'http://ec2-15-164-215-195.ap-northeast-2.compute.amazonaws.com';
+  ReactGA.set({ debug: true });
 }
 
-ReactDOM.render(<Main />, document.getElementById('root'));
+const logPageView = () => {
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+};
+
+axios.defaults.baseURL = `${process.env.REACT_APP_API_HOST}`;
+
+ReactDOM.render(<Main onUpdate={logPageView} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

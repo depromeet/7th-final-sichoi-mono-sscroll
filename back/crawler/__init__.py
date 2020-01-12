@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 import boto3
 from boto3 import s3
+from bs4 import element
 from selenium import webdriver
 
 from app.config import Config
@@ -43,34 +44,66 @@ class Crawler:
     name: str
     driver: webdriver.Chrome = webdriver.Chrome('chromedriver')
     s3_domain: str = 'http://img-dev.sscroll.net.s3.amazonaws.com/upload/'
+    continued: bool = True
 
     @abstractmethod
     def load_page(self):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def load_page_contents(self):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def load_content(self, url):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def parse_content(self):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def img_process(self, img):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def video_process(self, video):
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def url_process(self, url: str) -> (str, str):
-        pass
+        raise NotImplementedError()
+
+    def body_process(self, body: element.Tag):
+        def recursive(el: element.Tag, instance):
+            if hasattr(el, 'children'):
+                [recursive(e, instance) for e in el.children]
+
+            instance.style_process(el)
+
+        recursive(body, self)
+
+        [self.img_process(img) for img in body.findAll('img')]
+        [self.video_process(video) for video in body.findAll('video')]
+
+    def style_process(self, el):
+        if not hasattr(el, 'attrs'):
+            return
+
+        keywords = [
+            'style',
+            'max-with',
+            'max-height',
+            'width',
+            'height',
+            'align',
+        ]
+
+        for k in keywords:
+            if k not in el.attrs:
+                continue
+
+            del el.attrs[k]
 
     def save_resource(self, res) -> None:
         name, last = self.url_process(res['src'])
@@ -87,12 +120,8 @@ class Crawler:
             },
         )
         os.remove(rename)
-        res['src'] = self.s3_domain + rename
 
-        if 'height' in res.attrs:
-            del res.attrs['height']
-        if 'width' in res.attrs:
-            del res.attrs['width']
+        res['src'] = self.s3_domain + rename
 
     def rename(self, name: bytes):
         return hashlib.sha256(name).hexdigest()
@@ -100,7 +129,7 @@ class Crawler:
     def run(self, page=0):
         self.page = page
         try:
-            while True:
+            while self.continued:
                 self.load_page()
                 page_contents = self.load_page_contents()
                 if not page_contents:

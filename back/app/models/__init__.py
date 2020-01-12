@@ -6,7 +6,7 @@ from app.models.article import Article
 
 
 class Packet(Base):
-    __tablename__ = "Packet"
+    __tablename__ = "packet"
 
     request_header = Column(JSON)
     request_body = Column(JSON)
