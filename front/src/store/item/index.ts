@@ -26,9 +26,6 @@ class ItemStore {
 
     const item = new ItemModel({ ...data });
     this.itemList.push(item);
-    for (let i of this.itemList) {
-      console.log(i);
-    }
   }
 }
 
