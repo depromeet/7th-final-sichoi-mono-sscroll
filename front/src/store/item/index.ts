@@ -27,6 +27,10 @@ class ItemStore {
     const item = new ItemModel({ ...data });
     this.itemList.push(item);
   }
+
+  async read(id: number) {
+    await axios.post(`/content/${id}/read`);
+  }
 }
 
 export default new ItemStore();

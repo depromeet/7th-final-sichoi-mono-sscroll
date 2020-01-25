@@ -1,4 +1,5 @@
 import { observable } from 'mobx';
+import ItemStore from 'store/item';
 
 interface ModelConstructor {
   id: number;
@@ -16,4 +17,8 @@ export default class ItemModel {
     this.title = title;
     this.content = body;
   }
+
+  read = () => {
+    ItemStore.read(this.id);
+  };
 }

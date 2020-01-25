@@ -42,13 +42,13 @@ const itemStyles = makeStyles({
   },
 });
 
-interface IProps {
+interface Props {
   data: ItemModel;
   key: number;
 }
 
-export const Item: React.FC<IProps> = props => {
-  const item = props.data;
+export const Item = ({ data, key }: Props) => {
+  const item = data;
   const style = itemStyles();
 
   const [expaneded, setExpaned] = useState(false);
@@ -70,6 +70,7 @@ export const Item: React.FC<IProps> = props => {
               className={style.button}
               onClick={() => {
                 setExpaned(true);
+                data.read();
               }}
             >
               펼치기

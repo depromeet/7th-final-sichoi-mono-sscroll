@@ -18,6 +18,7 @@ const logPageView = () => {
 };
 
 axios.defaults.baseURL = `${process.env.REACT_APP_API_HOST}`;
+axios.defaults.withCredentials = true;
 
 ReactDOM.render(<Main onUpdate={logPageView} />, document.getElementById('root'));
 
