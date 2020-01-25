@@ -4,18 +4,16 @@ import random
 import time
 import traceback
 import urllib
-from _datetime import datetime
 from abc import abstractmethod
 from dataclasses import dataclass
+from datetime import datetime
 
 import boto3
-from boto3 import s3
-from bs4 import element
-from selenium import webdriver
-
 from app.config import Config
 from app.db import create_session
 from app.models import Article
+from bs4 import element
+from selenium import webdriver
 
 s3 = boto3.client(
     's3',
@@ -36,13 +34,20 @@ opener.addheaders = [
 ]
 urllib.request.install_opener(opener)
 
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("disable-gpu")
+
 
 @dataclass
 class Crawler:
     base_url: str
     page: int
     name: str
-    driver: webdriver.Chrome = webdriver.Chrome('chromedriver')
+    driver: webdriver.Chrome = webdriver.Chrome(
+        'chromedriver', chrome_options=options
+    )
     s3_domain: str = 'http://img-dev.sscroll.net.s3.amazonaws.com/upload/'
     continued: bool = True
 

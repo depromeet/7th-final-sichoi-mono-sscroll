@@ -7,7 +7,8 @@ from app.config import Config
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+app.secret_key = Config.SECRET_KEY
+CORS(app, supports_credentials=True)
 
 
 from app.api import *

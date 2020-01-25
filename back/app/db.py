@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import Any
 
+from app.config import Config
 from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative.api import DeclarativeMeta
 from sqlalchemy.orm import Query, Session, scoped_session, sessionmaker
-
-from app.config import Config
 
 engine = Config.engine()
 create_session: Session = scoped_session(
@@ -28,4 +28,4 @@ class BaseModel:
         return self.session.query(self.__class__)
 
 
-Base: Any = declarative_base(bind=engine, cls=BaseModel)
+Base: DeclarativeMeta = declarative_base(bind=engine, cls=BaseModel)

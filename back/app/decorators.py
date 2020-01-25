@@ -3,10 +3,9 @@ import traceback
 from contextlib import contextmanager
 from functools import wraps
 
-from flask import abort, request
-
 from app import db, models
 from app.context import ApiContext
+from flask import abort, request
 
 
 @contextmanager
