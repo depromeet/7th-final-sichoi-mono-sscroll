@@ -32,7 +32,7 @@ def router(application, **kwargs):
                     res = {}
                     context = create_context(session)
                     kwargs['context'] = context
-                    res: dict = fn(*args, **kwargs)
+                    res: str = json.dumps(fn(*args, **kwargs))
 
                     packet = models.Packet(
                         request_header=dict(context.request.headers),
