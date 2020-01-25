@@ -20,12 +20,14 @@ class ItemStore {
     }
 
     this.isLoading = true;
-    const response = await axios.get('/content');
+    const response = await axios.get<Array<any>>('/content');
     this.isLoading = false;
     const data = response.data;
 
-    const item = new ItemModel({ ...data });
-    this.itemList.push(item);
+    data.forEach(el => {
+      const item = new ItemModel({ ...el });
+      this.itemList.push(item);
+    });
   }
 
   async read(id: number) {
