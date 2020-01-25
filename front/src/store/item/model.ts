@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 import ItemStore from 'store/item';
 
-interface ModelConstructor {
+export interface ModelConstructor {
   id: number;
   title: string;
   body: string;

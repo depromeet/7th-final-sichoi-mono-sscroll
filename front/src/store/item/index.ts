@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { action, observable } from 'mobx';
-import ItemModel from './model';
+import ItemModel, { ModelConstructor } from './model';
 
 class ItemStore {
   @observable
@@ -20,7 +20,7 @@ class ItemStore {
     }
 
     this.isLoading = true;
-    const response = await axios.get<Array<any>>('/content');
+    const response = await axios.get<ModelConstructor[]>('/content');
     this.isLoading = false;
     const data = response.data;
 
