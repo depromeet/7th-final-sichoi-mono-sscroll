@@ -71,13 +71,41 @@ export const Item = ({ data, key }: Props) => {
 
   const [expaneded, setExpaned] = useState(false);
 
+  const link = () => {
+    const copyText = (x: string) => {
+      const el = document.createElement('textarea');
+      el.value = x;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const sel = window.getSelection();
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(range);
+          el.setSelectionRange(0, 999999);
+        }
+      } else {
+        el.select();
+      }
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    };
+    copyText(window.location.host + '/' + item.id);
+    alert('링크가 복사되었습니다!');
+  };
+
   return (
     <Box className={style.box}>
       <Card className={style.card}>
         <Collapse in={expaneded} collapsedHeight={500}>
           <Box className={style.contentBox}>
-            <Box>
+            <Box mb="0.5rem">
               <Typography variant="h6">{item.title}</Typography>
+              <Button onClick={link}>링크 복사하기</Button>
             </Box>
             <Box dangerouslySetInnerHTML={{ __html: item.content }}></Box>
           </Box>
