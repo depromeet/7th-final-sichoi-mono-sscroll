@@ -59,7 +59,7 @@ const itemStyles = makeStyles({
     marginTop: '1rem',
   },
   content: {
-    fontSize: '1.25rem',
+    fontSize: '1.5rem',
   },
 });
 
