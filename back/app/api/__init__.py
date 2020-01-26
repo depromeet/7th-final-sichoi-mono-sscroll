@@ -13,8 +13,8 @@ from sqlalchemy.sql.expression import func
 route: Any = router(app)
 
 
-@route('/', methods=['GET'])
-def index(context: ApiContext) -> dict:
+@app.route('/', methods=['GET'])
+def index() -> dict:
     return {'sscroll': 'hi'}
 
 
