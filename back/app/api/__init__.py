@@ -19,7 +19,7 @@ def index() -> dict:
 
 
 @route('/content', methods=['GET'])
-def get_content(context: ApiContext) -> list:
+def get_contents(context: ApiContext) -> list:
     articles = (
         context.query(Article)
         .filter(~Article.logs.any(Log.user == context.user))
@@ -28,6 +28,12 @@ def get_content(context: ApiContext) -> list:
         .all()
     )
     return [article.to_json() for article in articles]
+
+
+@route('/content/<int:id>', methods=['GET'])
+def get_content(context: ApiContext, id) -> dict:
+    article: Article = context.query(Article).get(id)
+    return article.to_json()
 
 
 @route('/content/<int:id>/read', methods=['POST'])
