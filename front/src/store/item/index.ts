@@ -14,6 +14,17 @@ class ItemStore {
   }
 
   @action.bound
+  async fetchById(id: string) {
+    if (this.isLoading) {
+      return;
+    }
+    this.isLoading = true;
+    const res = await axios.get<ModelConstructor>(`/content/${id}`);
+    this.isLoading = false;
+    this.itemList.push(new ItemModel({ ...res.data }));
+  }
+
+  @action.bound
   async fetch() {
     if (this.isLoading) {
       return;

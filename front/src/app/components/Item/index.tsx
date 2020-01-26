@@ -1,25 +1,43 @@
 import { Box, Button, Card, Collapse, makeStyles, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { useParams } from 'react-router';
 import ItemStore from 'store/item';
 import ItemModel from 'store/item/model';
 
-export const ItemList: React.FC = observer(() => {
-  const store = ItemStore;
+interface Params {
+  id: string;
+}
 
-  return (
+export const ItemList = observer(() => {
+  const { id } = useParams<Params>();
+  const [hasId, setHasId] = useState(!!id);
+
+  useEffect(() => {
+    if (!id) {
+      console.log('what');
+      return;
+    }
+
+    ItemStore.fetchById(id);
+    setHasId(false);
+  }, [id]);
+
+  return hasId ? (
+    <></>
+  ) : (
     <InfiniteScroll
       loader={
         <div className="loader" key={0}>
           Loading ...
         </div>
       }
-      loadMore={store.fetch}
-      hasMore={!store.isLoading}
+      loadMore={ItemStore.fetch}
+      hasMore={!ItemStore.isLoading}
       key={0}
     >
-      {store.itemList.map(item => (
+      {ItemStore.itemList.map(item => (
         <Item data={item} key={item.id}></Item>
       ))}
     </InfiniteScroll>
