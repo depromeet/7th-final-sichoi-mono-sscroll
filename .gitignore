@@ -193,4 +193,5 @@ yarn-debug.log*
 yarn-error.log*
 
 back/app/config/
+back/flask_session
 front/.env.*
