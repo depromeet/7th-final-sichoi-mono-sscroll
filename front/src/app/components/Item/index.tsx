@@ -58,6 +58,9 @@ const itemStyles = makeStyles({
     width: '100%',
     marginTop: '1rem',
   },
+  content: {
+    fontSize: '1.25rem',
+  },
 });
 
 interface Props {
@@ -107,7 +110,10 @@ export const Item = ({ data, key }: Props) => {
               <Typography variant="h6">{item.title}</Typography>
               <Button onClick={link}>링크 복사하기</Button>
             </Box>
-            <Box dangerouslySetInnerHTML={{ __html: item.content }}></Box>
+            <Box
+              className={style.content}
+              dangerouslySetInnerHTML={{ __html: item.content }}
+            ></Box>
           </Box>
         </Collapse>
         <Collapse in={!expaneded} collapsedHeight={0}>
