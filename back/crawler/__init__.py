@@ -35,6 +35,9 @@ opener.addheaders = [
 urllib.request.install_opener(opener)
 
 options = webdriver.ChromeOptions()
+options.add_experimental_option(
+    'prefs', {'download.default_directory': os.getcwd()}
+)
 options.add_argument('headless')
 options.add_argument('window-size=1920x1080')
 options.add_argument("disable-gpu")
@@ -110,13 +113,9 @@ class Crawler:
 
             del el.attrs[k]
 
-    def save_resource(self, res) -> None:
-        name, last = self.url_process(res['src'])
-        rename = self.rename(name.encode())
-        rename += '.' + last
-        urllib.request.urlretrieve(name, rename)
+    def upload_s3(self, name, rename):
         s3.upload_file(
-            rename,
+            name,
             bucket,
             'upload/' + rename,
             ExtraArgs={
@@ -124,8 +123,14 @@ class Crawler:
                 'CacheControl': 'max-age=2592000',
             },
         )
-        os.remove(rename)
 
+    def save_resource(self, res) -> None:
+        name, last = self.url_process(res['src'])
+        rename = self.rename(name.encode())
+        rename += '.' + last
+        urllib.request.urlretrieve(name, rename)
+        self.upload_s3(rename, rename)
+        os.remove(rename)
         res['src'] = self.s3_domain + rename
 
     def rename(self, name: bytes):

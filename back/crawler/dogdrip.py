@@ -4,9 +4,8 @@ import urllib
 from _datetime import datetime
 
 import boto3
-from bs4 import BeautifulSoup, element
-
 from app.config import Config
+from bs4 import BeautifulSoup, element
 from crawler import Crawler, Item
 
 
@@ -44,15 +43,6 @@ class Dogdrip(Crawler):
 
         return name, name.split('.')[-1]
 
-    def video_process(self, video):
-        self.save_resource(video.find('source') or video)
-
-    def img_process(self, img):
-        self.save_resource(img)
-
-        if img.parent.name == 'a':
-            img.parent['href'] = img['src']
-
     def parse_content(self):
         title = self.driver.find_elements_by_css_selector(
             '.ed.link.text-bold'
@@ -68,3 +58,12 @@ class Dogdrip(Crawler):
         print(f'created {item.title}')
         self.driver.back()
         return item
+
+    def video_process(self, video):
+        self.save_resource(video.find('source') or video)
+
+    def img_process(self, img):
+        self.save_resource(img)
+
+        if img.parent.name == 'a':
+            img.parent['href'] = img['src']
