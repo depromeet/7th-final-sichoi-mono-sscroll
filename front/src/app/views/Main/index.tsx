@@ -1,7 +1,6 @@
 import {
   AppBar,
   Box,
-  Container,
   createMuiTheme,
   CssBaseline,
   ThemeProvider,
@@ -41,9 +40,9 @@ const View = ({ onUpdate }: Props) => {
               <Typography variant="h6">쓰끄롤</Typography>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="md">
+          <Box maxWidth="md">
             <Route path="/:id?" component={ItemList} />
-          </Container>
+          </Box>
         </Box>
       </Router>
     </ThemeProvider>
