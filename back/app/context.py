@@ -26,6 +26,10 @@ class ApiContext:
 
         key = mem_session['id']
         self.user = self.query(User).filter(User.key == key).first()
+        if not self.user:
+            self.user = User(key=key)
+            self.session.add(self.user)
+            self.session.flush()
 
         if self.request.method == 'POST':
             self.data = self.request.json
