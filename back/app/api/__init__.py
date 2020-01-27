@@ -8,6 +8,7 @@ from app.decorators import router
 from app.models.article import Article
 from app.models.log import Log
 from flask import session
+from sqlalchemy import desc
 from sqlalchemy.sql.expression import func
 
 route: Any = router(app)
@@ -20,13 +21,27 @@ def index() -> dict:
 
 @route('/content', methods=['GET'])
 def get_contents(context: ApiContext) -> list:
-    articles = (
+
+    articles: Iterable[Article] = []
+    if 'created' in session:
+        articles += (
+            context.query(Article)
+            .join(Article.logs)
+            .group_by(Article.id, Log.article_id)
+            .order_by(desc(func.count(Article.logs)))
+            .limit(8)
+            .all()
+        )
+        del session['created']
+
+    articles += (
         context.query(Article)
         .filter(~Article.logs.any(Log.user == context.user))
         .order_by(func.random())
         .limit(2)
         .all()
     )
+
     return [article.to_json() for article in articles]
 
 

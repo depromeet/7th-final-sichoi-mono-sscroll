@@ -28,4 +28,4 @@ class BaseModel:
         return self.session.query(self.__class__)
 
 
-Base: DeclarativeMeta = declarative_base(bind=engine, cls=BaseModel)
+Base: BaseModel = declarative_base(bind=engine, cls=BaseModel)

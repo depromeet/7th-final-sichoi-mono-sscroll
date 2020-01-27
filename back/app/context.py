@@ -23,6 +23,7 @@ class ApiContext:
             self.session.add(User(key=key))
             self.session.flush()
             mem_session['id'] = key
+            mem_session['created'] = True
 
         key = mem_session['id']
         self.user = self.query(User).filter(User.key == key).first()
