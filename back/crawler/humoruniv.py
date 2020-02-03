@@ -1,13 +1,8 @@
-import hashlib
-import os
-import urllib
-from _datetime import datetime
+from typing import Tuple
 
-import boto3
-from bs4 import BeautifulSoup, element
-
-from app.config import Config
+from bs4 import BeautifulSoup
 from crawler import Crawler, Item
+from datetime import datetime
 
 
 class HumorUniv(Crawler):
@@ -53,6 +48,11 @@ class HumorUniv(Crawler):
         for div in body.select('div.comment_crop_href_mp4'):
             div.extract()
 
+        for div in body.findAll(
+            'div', id=lambda x: x and x.startswith('show_')
+        ):
+            div.extract()
+
         body = str(body)
 
         item = Item(title=title, text=body, created_at=datetime.now())
@@ -60,7 +60,7 @@ class HumorUniv(Crawler):
         self.driver.back()
         return item
 
-    def url_process(self, url) -> (str, str):
+    def url_process(self, url) -> Tuple[str, str]:
         name = url
         if url.startswith('http://t.huv.kr/thumb_crop_resize.php?url='):
             name = url.split('?')[1].split('=')[1]

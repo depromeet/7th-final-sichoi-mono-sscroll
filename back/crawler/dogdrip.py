@@ -1,5 +1,6 @@
 import hashlib
 import os
+from typing import Tuple
 import urllib
 from _datetime import datetime
 
@@ -32,7 +33,7 @@ class Dogdrip(Crawler):
     def load_content(self, url):
         self.driver.get(url)
 
-    def url_process(self, url) -> (str, str):
+    def url_process(self, url) -> Tuple[str, str]:
         name = url
         if './' in url:
             name = url.replace('./', 'http://www.dogdrip.net/')

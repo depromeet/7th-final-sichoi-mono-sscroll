@@ -3,6 +3,7 @@ import os
 import random
 import time
 import traceback
+from typing import Tuple
 import urllib
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -35,9 +36,9 @@ opener.addheaders = [
 urllib.request.install_opener(opener)
 
 options = webdriver.ChromeOptions()
-options.add_experimental_option(
-    'prefs', {'download.default_directory': os.getcwd()}
-)
+# options.add_experimental_option(
+#     'prefs', {'download.default_directory': os.getcwd()}
+# )
 options.add_argument('headless')
 options.add_argument('window-size=1920x1080')
 options.add_argument("disable-gpu")
@@ -51,7 +52,7 @@ class Crawler:
     driver: webdriver.Chrome = webdriver.Chrome(
         'chromedriver', chrome_options=options
     )
-    s3_domain: str = 'http://img-dev.sscroll.net.s3.amazonaws.com/upload/'
+    cloudfront_domain: str = 'https://d34ve0gvyhtm40.cloudfront.net/upload/'
     continued: bool = True
 
     @abstractmethod
@@ -79,7 +80,7 @@ class Crawler:
         raise NotImplementedError()
 
     @abstractmethod
-    def url_process(self, url: str) -> (str, str):
+    def url_process(self, url: str) -> Tuple[str, str]:
         raise NotImplementedError()
 
     def body_process(self, body: element.Tag):
@@ -113,6 +114,9 @@ class Crawler:
 
             del el.attrs[k]
 
+        if el.name == 'embed' and 'youtube' in el.attrs['src']:
+            el.attrs['style'] = 'width: 100%; height: 40vh;'
+
     def upload_s3(self, name, rename):
         s3.upload_file(
             name,
@@ -131,46 +135,43 @@ class Crawler:
         urllib.request.urlretrieve(name, rename)
         self.upload_s3(rename, rename)
         os.remove(rename)
-        res['src'] = self.s3_domain + rename
+        res['src'] = self.cloudfront_domain + rename
 
     def rename(self, name: bytes):
         return hashlib.sha256(name).hexdigest()
 
     def run(self, page=0):
         self.page = page
-        try:
-            while self.continued:
-                self.load_page()
-                page_contents = self.load_page_contents()
-                if not page_contents:
-                    print(f'{self} 완료')
-                    return
+        while self.continued:
+            self.load_page()
+            page_contents = self.load_page_contents()
+            if not page_contents:
+                print(f'{self} 완료')
+                return
 
-                for url in page_contents:
-                    self.load_content(url)
-                    content = self.parse_content()
-                    session = create_session()
+            for url in page_contents:
+                self.load_content(url)
+                content = self.parse_content()
+                if content is None:
+                    continue
+                session = create_session()
 
-                    if (
-                        session.query(Article)
-                        .filter(Article.title == content.title)
-                        .first()
-                    ):
-                        continue
+                article = (
+                    session.query(Article)
+                    .filter(Article.title == content.title)
+                    .first()
+                )
 
-                    article = Article(
-                        title=content.title,
-                        body=content.text,
-                        source=self.name,
-                    )
-                    session.add(article)
-                    session.commit()
-                    time.sleep(random.random() * 1 + 2)
-                print(f'{self.page}페이지 탐색 완료')
-        except Exception as e:
-            traceback.print_tb(e.__traceback__)
-            print(e)
-            self.driver.quit()
+                if not article:
+                    article = Article()
+
+                article.title = content.title
+                article.body = content.text
+                article.source = self.name
+                session.add(article)
+                session.commit()
+                time.sleep(random.random() * 1 + 2)
+            print(f'{self.page}페이지 탐색 완료')
 
 
 @dataclass
