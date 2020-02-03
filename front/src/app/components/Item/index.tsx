@@ -1,6 +1,7 @@
 import { Box, Button, Card, Collapse, makeStyles, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
+import ReactGA from 'react-ga';
 import InfiniteScroll from 'react-infinite-scroller';
 import { useParams } from 'react-router';
 import ItemStore from 'store/item';
@@ -16,7 +17,6 @@ export const ItemList = observer(() => {
 
   useEffect(() => {
     if (!id) {
-      console.log('what');
       return;
     }
 
@@ -97,7 +97,7 @@ export const Item = ({ data, key }: Props) => {
       document.execCommand('copy');
       document.body.removeChild(el);
     };
-    copyText(window.location.host + '/' + item.id);
+    copyText(window.location.host + '/' + item.id + '?utm_source=share');
     alert('링크가 복사되었습니다!');
   };
 
@@ -123,6 +123,7 @@ export const Item = ({ data, key }: Props) => {
               onClick={() => {
                 setExpaned(true);
                 data.read();
+                ReactGA.pageview('/' + item.id);
               }}
             >
               펼치기
