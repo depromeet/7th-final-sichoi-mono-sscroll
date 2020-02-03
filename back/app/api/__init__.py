@@ -1,8 +1,8 @@
 import json
 import random
-from typing import Any
+from typing import Any, Iterable
 
-from app import app, models
+from app import app
 from app.context import ApiContext
 from app.decorators import router
 from app.models.article import Article
@@ -11,7 +11,7 @@ from flask import session
 from sqlalchemy import desc
 from sqlalchemy.sql.expression import func
 
-route: Any = router(app)
+route = router(app)
 
 
 @app.route('/', methods=['GET'])
