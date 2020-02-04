@@ -26,12 +26,21 @@ def get_contents(context: ApiContext) -> list:
     if 'created' in session:
         articles += (
             context.query(Article)
+            .filter(
+                Article.id.in_(
+                    [7132, 6881, 2318, 5773, 3847, 3333, 6230, 4901]
+                )
+            )
+            .all()
+        )
+        '''articles += (
+            context.query(Article)
             .join(Article.logs)
             .group_by(Article.id, Log.article_id)
             .order_by(desc(func.count(Article.logs)))
             .limit(8)
             .all()
-        )
+        )'''
         del session['created']
 
     articles += (
@@ -41,7 +50,6 @@ def get_contents(context: ApiContext) -> list:
         .limit(2)
         .all()
     )
-
     return [article.to_json() for article in articles]
 
 
