@@ -44,13 +44,16 @@ def get_contents(context: ApiContext) -> list:
         )'''
         del session['created']
 
-    articles += (
+    result = (
         context.query(Article)
         .filter(~Article.logs.any(Log.user == context.user))
         .order_by(func.random())
-        .limit(4)
+        .limit(20)
         .all()
     )
+
+    random.shuffle(result)
+    articles = [result.pop() for i in range(2)]
     return [article.to_json() for article in articles]
 
 
