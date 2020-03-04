@@ -2,10 +2,10 @@ import { Box, Button, Card, Collapse, makeStyles, Typography } from '@material-u
 import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
-import InfiniteScroll from 'react-infinite-scroller';
 import { useParams } from 'react-router';
 import ItemStore from 'store/item';
 import ItemModel from 'store/item/model';
+import InfiniteScroll from 'react-infinite-scroller';
 
 interface Params {
   id: string;
@@ -34,7 +34,7 @@ export const ItemList = observer(() => {
         </div>
       }
       loadMore={ItemStore.fetch}
-      hasMore={!ItemStore.isLoading}
+      hasMore={true}
       key={0}
     >
       {ItemStore.itemList.map(item => (
