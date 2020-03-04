@@ -37,6 +37,10 @@ class ItemStore {
 
     data.forEach(el => {
       const item = new ItemModel({ ...el });
+      const findItem = this.itemList.find(el => el.id === item.id);
+      if (findItem) {
+        return;
+      }
       this.itemList.push(item);
     });
   }

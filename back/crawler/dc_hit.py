@@ -74,6 +74,8 @@ class DCInsideHit(Crawler):
 
     def img_process(self, img):
         self.save_resource(img)
+        if img.parent.name == 'a':
+            img.parent['href'] = img['src']
 
     def parse_content(self):
         try:

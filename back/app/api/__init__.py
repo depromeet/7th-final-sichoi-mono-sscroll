@@ -2,14 +2,15 @@ import json
 import random
 from typing import Any, Iterable
 
+from flask import session
+from sqlalchemy import desc
+from sqlalchemy.sql.expression import func
+
 from app import app
 from app.context import ApiContext
 from app.decorators import router
 from app.models.article import Article
 from app.models.log import Log
-from flask import session
-from sqlalchemy import desc
-from sqlalchemy.sql.expression import func
 
 route = router(app)
 
@@ -47,7 +48,7 @@ def get_contents(context: ApiContext) -> list:
         context.query(Article)
         .filter(~Article.logs.any(Log.user == context.user))
         .order_by(func.random())
-        .limit(2)
+        .limit(4)
         .all()
     )
     return [article.to_json() for article in articles]

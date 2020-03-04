@@ -3,7 +3,11 @@ from crawler.dogdrip import Dogdrip
 from crawler.humoruniv import HumorUniv
 import traceback
 
-crawlers = [DCInsideHit(), HumorUniv(), Dogdrip()]
+crawlers = [
+    DCInsideHit(),
+    Dogdrip(),
+    HumorUniv(),
+]
 # crawlers = [HumorUniv(), Dogdrip()]
 
 
