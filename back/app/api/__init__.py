@@ -1,6 +1,6 @@
 import json
 import random
-from typing import Any, Iterable
+from typing import Any, Iterable, List
 
 from flask import session
 from sqlalchemy import desc
@@ -23,37 +23,31 @@ def index() -> dict:
 @route('/content', methods=['GET'])
 def get_contents(context: ApiContext) -> list:
 
-    articles: Iterable[Article] = []
+    articles: List[Article] = []
+    pop_count = 2
     if 'created' in session:
         articles += (
             context.query(Article)
-            .filter(
-                Article.id.in_(
-                    [7132, 6881, 2318, 5773, 3847, 3333, 6230, 4901]
-                )
-            )
-            .all()
-        )
-        '''articles += (
-            context.query(Article)
             .join(Article.logs)
+            .filter(Article.source != 'humoruniv')
             .group_by(Article.id, Log.article_id)
             .order_by(desc(func.count(Article.logs)))
-            .limit(8)
+            .limit(30)
             .all()
-        )'''
+        )
         del session['created']
-
-    result = (
-        context.query(Article)
-        .filter(~Article.logs.any(Log.user == context.user))
-        .order_by(func.random())
-        .limit(20)
-        .all()
-    )
-
-    random.shuffle(result)
-    articles = [result.pop() for i in range(2)]
+        pop_count = 10
+    else:
+        articles += (
+            context.query(Article)
+            .filter(Article.source != 'humoruniv')
+            .filter(~Article.logs.any(Log.user == context.user))
+            .order_by(func.random())
+            .limit(20)
+            .all()
+        )
+    random.shuffle(articles)
+    articles = [articles.pop() for i in range(pop_count)]
     return [article.to_json() for article in articles]
 
 
