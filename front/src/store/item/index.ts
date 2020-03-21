@@ -1,17 +1,16 @@
 import axios from 'axios';
 import { action, observable } from 'mobx';
 import ItemModel, { ModelConstructor } from './model';
+import ReactGA from 'react-ga';
 
 class ItemStore {
   @observable
-  itemList: ItemModel[];
+  itemList: ItemModel[] = [];
 
-  isLoading: boolean;
+  @observable
+  readItemList: number[] = [];
 
-  constructor() {
-    this.isLoading = false;
-    this.itemList = [];
-  }
+  isLoading: boolean = false;
 
   @action.bound
   async fetchById(id: string) {
@@ -45,17 +44,13 @@ class ItemStore {
   }
 
   async read(id: number) {
+    if (this.readItemList.find(el => el === id)) {
+      return;
+    }
     await axios.post(`/content/${id}/read`);
+    ReactGA.pageview('/' + id);
+    this.readItemList.push(id);
   }
 }
 
 export default new ItemStore();
-
-/**
- * Item에 들어갈 것
- * created_at
- * view count
- * title
- * description
- * like unlike
- */
