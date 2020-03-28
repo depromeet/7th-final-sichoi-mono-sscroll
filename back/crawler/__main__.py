@@ -4,8 +4,8 @@ from crawler.humoruniv import HumorUniv
 import traceback
 
 crawlers = [
-    Dogdrip(),
     DCInsideHit(),
+    Dogdrip(),
     HumorUniv(),
 ]
 # crawlers = [HumorUniv(), Dogdrip()]

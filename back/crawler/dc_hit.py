@@ -83,9 +83,7 @@ class DCInsideHit(Crawler):
                 'span.title_subject'
             ).text
         except Exception as e:
-            import pdb
-
-            pdb.set_trace()
+            pass
         body = BeautifulSoup(self.driver.page_source, 'html.parser')
         body = body.select('div.writing_view_box')[0]
 
