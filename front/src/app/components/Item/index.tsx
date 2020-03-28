@@ -56,11 +56,18 @@ const itemStyles = makeStyles({
   box: {
     marginTop: '1rem',
   },
+  titleBox: {
+    marginLeft: '1rem',
+    marginRight: '1rem',
+  },
   card: {
-    padding: '1rem',
+    paddingTop: '1rem',
   },
   contentBox: {
     overflow: 'hidden',
+    paddingLeft: '1rem',
+    paddingRight: '1rem',
+    fontSize: '1.125rem',
   },
   button: {
     width: '100%',
@@ -101,17 +108,18 @@ export const Item = ({ data, key }: Props) => {
   return (
     <Box className={style.box}>
       <Card className={style.card}>
-        <Box className={style.contentBox}>
-          <Box mb="0.5rem">
-            <Typography variant="h6">{item.title}</Typography>
-            <Button onClick={() => link(item.id)}>링크 복사하기</Button>
-          </Box>
-          <Collapse in={expaneded} collapsedHeight={height}>
-            <RootRef rootRef={contentBox}>
-              <Box dangerouslySetInnerHTML={{ __html: item.content }}></Box>
-            </RootRef>
-          </Collapse>
+        <Box mb="0.5rem" className={style.titleBox}>
+          <Typography variant="h6">{item.title}</Typography>
+          <Button onClick={() => link(item.id)}>링크 복사하기</Button>
         </Box>
+        <Collapse in={expaneded} collapsedHeight={height}>
+          <RootRef rootRef={contentBox}>
+            <Box
+              dangerouslySetInnerHTML={{ __html: item.content }}
+              className={style.contentBox}
+            ></Box>
+          </RootRef>
+        </Collapse>
         <Collapse in={!expaneded} collapsedHeight={0}>
           <Box>
             <Button className={style.button} onClick={expand}>

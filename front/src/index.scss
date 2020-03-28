@@ -11,7 +11,8 @@ code {
 }
 
 img {
-  width: 100%;
+  width: calc(100% + 2rem);
+  margin-left: calc(-1rem);
 }
 
 video {

@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga';
 import Main from './app/views/Main';
-import './index.css';
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
 ReactGA.initialize('UA-120460450-1');
